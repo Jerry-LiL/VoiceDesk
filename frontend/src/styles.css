@@ -1,0 +1,260 @@
+:root {
+  --paper: #efe4d2;
+  --paper-deep: #e4d3b8;
+  --ink: #241c16;
+  --muted: #6f6458;
+  --card: #fbf6ee;
+  --line: #d9c7aa;
+  --clay: #c24d2c;
+  --clay-dark: #8e341c;
+  --user: #f3d7b0;
+  --moss: #3d6b4f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 20% -10%, #f7efe2, transparent 42%),
+    linear-gradient(180deg, #f3e7d4 0%, var(--paper) 40%, #e7d5b8 100%);
+  font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+}
+
+.page {
+  width: min(520px, 100%);
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  padding: 22px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.mark {
+  margin: 0;
+  font-family: Georgia, "Iowan Old Style", Palatino, serif;
+  font-size: 40px;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+.sub,
+.status,
+.who,
+.intent,
+.hints,
+.latency {
+  color: var(--muted);
+}
+
+.sub {
+  margin: 4px 0 0;
+  font-size: 14px;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #b9a48a;
+}
+
+.dot.on {
+  background: var(--moss);
+}
+
+.log {
+  list-style: none;
+  margin: 0;
+  padding: 8px 2px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.placeholder {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.45;
+  max-width: 34ch;
+}
+
+.turn {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 88%;
+}
+
+.turn p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.turn.user {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.turn.user p {
+  background: var(--user);
+  border-radius: 14px 14px 4px 14px;
+  padding: 8px 12px;
+}
+
+.turn.assistant {
+  align-self: flex-start;
+  border-left: 3px solid var(--clay);
+  padding-left: 10px;
+}
+
+.who,
+.intent {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.error {
+  margin: 0;
+  color: var(--clay-dark);
+  font-size: 14px;
+}
+
+.latency {
+  margin: 0;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.composer {
+  display: flex;
+  gap: 8px;
+}
+
+.composer input {
+  flex: 1;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font: inherit;
+}
+
+.composer button,
+.texty {
+  border: 0;
+  background: transparent;
+  color: var(--clay-dark);
+  font: inherit;
+  cursor: pointer;
+}
+
+.composer button {
+  padding: 0 8px;
+}
+
+.composer button:disabled,
+.composer input:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.talk-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 8px;
+}
+
+.talk {
+  width: 124px;
+  height: 124px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--clay);
+  color: #fffaf3;
+  font: inherit;
+  font-size: 16px;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: 0 8px 0 var(--clay-dark);
+  flex: 0 0 auto;
+}
+
+.talk:active,
+.talk.live {
+  transform: translateY(4px);
+  box-shadow: 0 4px 0 var(--clay-dark);
+  background: #d65a36;
+}
+
+.talk.busy {
+  background: #a56a52;
+  box-shadow: 0 8px 0 #7c4d3a;
+}
+
+.meter {
+  width: 180px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--paper-deep);
+  overflow: hidden;
+}
+
+.meter span {
+  display: block;
+  height: 100%;
+  background: var(--clay);
+}
+
+.hints {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 16px 14px 12px;
+  }
+
+  .mark {
+    font-size: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .talk:active,
+  .talk.live {
+    transform: none;
+  }
+}
