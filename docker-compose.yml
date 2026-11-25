@@ -1,0 +1,60 @@
+services:
+  api:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      VOICEDESK_STT_BACKEND: ${VOICEDESK_STT_BACKEND:-mock}
+      VOICEDESK_LLM_BACKEND: ${VOICEDESK_LLM_BACKEND:-mock}
+      VOICEDESK_TTS_BACKEND: ${VOICEDESK_TTS_BACKEND:-mock}
+      VOICEDESK_WHISPER_MODEL: ${VOICEDESK_WHISPER_MODEL:-tiny}
+      VOICEDESK_WHISPER_DEVICE: ${VOICEDESK_WHISPER_DEVICE:-cpu}
+      VOICEDESK_WHISPER_COMPUTE_TYPE: ${VOICEDESK_WHISPER_COMPUTE_TYPE:-int8}
+      VOICEDESK_WHISPER_LANGUAGE: ${VOICEDESK_WHISPER_LANGUAGE:-en}
+      VOICEDESK_MOCK_TRANSCRIPT: ${VOICEDESK_MOCK_TRANSCRIPT:-hello there}
+      VOICEDESK_OPENAI_API_KEY: ${VOICEDESK_OPENAI_API_KEY:-}
+      VOICEDESK_OPENAI_MODEL: ${VOICEDESK_OPENAI_MODEL:-gpt-4o-mini}
+      VOICEDESK_OPENAI_BASE_URL: ${VOICEDESK_OPENAI_BASE_URL:-}
+      VOICEDESK_OLLAMA_BASE_URL: ${VOICEDESK_OLLAMA_BASE_URL:-http://ollama:11434}
+      VOICEDESK_OLLAMA_MODEL: ${VOICEDESK_OLLAMA_MODEL:-llama3.2}
+      VOICEDESK_PIPER_MODEL_PATH: ${VOICEDESK_PIPER_MODEL_PATH:-}
+      VOICEDESK_PIPER_USE_CUDA: ${VOICEDESK_PIPER_USE_CUDA:-false}
+      VOICEDESK_MEMORY_MAX_TURNS: ${VOICEDESK_MEMORY_MAX_TURNS:-8}
+      VOICEDESK_INTENT_CONFIDENCE_THRESHOLD: ${VOICEDESK_INTENT_CONFIDENCE_THRESHOLD:-0.55}
+      VOICEDESK_LATENCY_LOG_PATH: ${VOICEDESK_LATENCY_LOG_PATH:-}
+      VOICEDESK_LOG_LEVEL: ${VOICEDESK_LOG_LEVEL:-INFO}
+    volumes:
+      - whisper-cache:/root/.cache/huggingface
+      - ./models:/models:ro
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 8
+      start_period: 20s
+
+  web:
+    build:
+      context: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      api:
+        condition: service_healthy
+
+  # Local model. Not started unless you pass --profile ollama.
+  ollama:
+    image: ollama/ollama:latest
+    profiles: ["ollama"]
+    ports:
+      - "11434:11434"
+
+volumes:
+  whisper-cache:
